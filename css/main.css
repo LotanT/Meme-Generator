@@ -1,0 +1,262 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* helpers */
+.flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.clean-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.main-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+img {
+    width: 100%;
+}
+
+.txt-size-input {
+    width: 40px;
+}
+
+/* header */
+header {
+    background-color: #ff7f00;
+}
+
+.main-header {
+    height: 4.0625em;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 1.531em;
+    padding-right: 1.5625em;
+}
+/* .header-links ul {
+    position: fixed;
+    top: 65px;
+    right: -100%;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    border-inline-start: 2px solid #e5e5e596;
+    width: 200px;
+    background-color: #ff7f00;
+    transition: right .6s, box-shadow .6s;
+} */
+
+.menu-open .header-links ul {
+    /* box-shadow: 0px 0px 20px #ccc; */
+    right: 0px;
+}
+
+.btn-menu {
+    font-size: 1.1875em;
+    font-weight: 900;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+
+.header-links ul li {
+    font-size: 1.1875em;
+    width: 5.25em;
+    color: #ffffff;
+    padding: 22px 22px;
+    cursor: pointer;
+}
+
+.header-links ul li:hover {
+    color: #040a2c;
+}
+
+.live {
+    color: #040a2c !important;
+    box-shadow: inset 0px -6px 0 #040a2c;
+}
+
+/* search bar */
+.search-bar {
+    height: 6.25em;
+}
+
+.search-container {
+    background-color: rgb(255, 255, 255);
+}
+
+/* gallery */
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    justify-items: center;
+    padding: 1.875em;
+}
+
+.main-gallery {
+    background-color: #e3e3e3;
+}
+
+/* editor */
+.main-editor {
+    justify-content: space-evenly;
+    padding-top: 1.5625em;
+    background-color: #e3e3e3;
+    flex-wrap: wrap;
+}
+
+.editor-control {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
+    padding: 0 1em;
+}
+
+.editor-control div {
+    max-width: 40px;
+}
+
+.editor-control img {
+    background-color: #ffffff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.meme-input {
+    grid-column: 1/-1;
+    max-height: 30px;
+    border-radius: 10px;
+    border: 0px;
+    text-align: center;
+    font-size: 1em;
+}
+
+.change-focus {
+    grid-column: 2/3;
+}
+
+.add-line {
+    grid-column: 3/4;
+}
+
+.trash {
+    grid-column: 4/5;
+}
+
+.increase-font {
+    grid-column: 1/2;
+}
+
+
+/* canvas */
+.canvas-container {
+   max-width: 80% ;
+
+}
+
+canvas {
+    /* background-color: rgb(110, 137, 161); */
+}
+
+/* footer */
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ff7f00;
+    height: 12.5em;
+}
+
+footer img {
+    max-width: 8.4375em;
+}
+
+footer span {
+    font-size: 1.1875em;
+    color: #ffffff;
+    padding-top: 1.25em;
+}
+
+
+/* hamburger */
+@media (max-width: 820px) {
+
+    .btn-menu {
+      cursor: pointer;
+    }
+   .header-links ul {
+        position: fixed;
+        top: 60px;
+        right: -100%;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        background-color: #ff7f00;
+        /* border-inline-start: 0px solid #e5e5e596; */
+        width: 200px;
+        transition: right .6s
+    
+    }
+}
+/* small */
+@media (min-width: 600px) {
+    .main-layout {
+        max-width: 600px;
+        /* margin: 0 auto;
+        padding-left: 0;
+        padding-right: 0; */
+    }
+
+}
+
+/* Medium */
+@media (min-width: 820px) {
+    .main-layout {
+        max-width: 780px;
+    }
+    .btn-menu {
+        display: none;
+    }
+    .editor-control {
+        display: grid;
+        gap: 1em;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
+        padding: 0 1em;
+    }
+    
+    .editor-control div {
+        max-width: 50px;
+    }
+    .meme-input {
+        grid-column: 1/-1;
+        max-height: 50px;
+        border-radius: 10px;
+        border: 0px;
+        text-align: center;
+        font-size: 1.25em;
+    }
+}
+
+/* Large */
+@media (min-width: 1020px) {
+    .main-layout {
+        max-width: 1000px;
+    }
+}

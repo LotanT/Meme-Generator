@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>meme gen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
+  </head>
+  <body onload="init()">
+    <header>
+      <div class="main-header flex main-layout">
+        <div class="logo">
+          <img src="logo/Layer 2_2021-12-15/Layer 2.png" alt="" />
+        </div>
+        <div class="header-links">
+          <ul class="clean-list flex">
+            <li class="live" onclick="onChangeDisplay(this)">Gallery</li>
+            <li onclick="onChangeDisplay(this)">Saved</li>
+            <li onclick="onChangeDisplay(this)">About</li>
+          </ul>
+          <div class="btn-menu" onclick="toggleMenu()">☰</div>
+        </div>
+      </div>
+    </header>
+    <section class="gallery">
+      <div class="main-gallery">
+        <div class="search-container">
+          <div class="search-bar main-layout"></div>
+        </div>
+        <div class="gallery-container main-layout"></div>
+      </div>
+    </section>
+    <section class="editor">
+      <div class="main-editor main-layout flex">
+        <div class="canvas-container">
+          <canvas id="my-canvas" height="400" width="400"></canvas>
+        </div>
+        <div class="editor-control">
+          <input
+            class="meme-input"
+            type="text"
+            oninput="onChangeImput(this.value)"
+          />
+          <div class="change-focus">
+            <img
+              src="logo/ICONS/up-and-down-opposite-double-arrows-side-by-side.png"
+              alt=""
+              onclick="onChangeFocus()"
+            />
+          </div>
+          <div class="add-line">
+            <img src="logo/ICONS/add.png" alt="" onclick="onAddLine()" />
+          </div>
+          <div class="trash">
+            <img src="logo/ICONS/trash.png" onclick="onDeletLint()" />
+          </div>
+          <div class="increase-font">
+            <img
+              src="logo/ICONS/increase font - icon.png"
+              onclick="onChangeTxtSize(1)"
+            />
+          </div>
+          <div class="decrease-font">
+            <img
+              src="logo/ICONS/decrease font - icon.png"
+              onclick="onChangeTxtSize(-1)"
+            />
+          </div>
+          <div class="align-left">
+            <img src="logo/ICONS/align-to-left.png" onclick="onChangeFocus()" />
+          </div>
+          <div class="align-center">
+            <img
+              src="logo/ICONS/center-text-alignment.png"
+              onclick="onChangeFocus()"
+            />
+          </div>
+          <div class="align-right">
+            <img
+              src="logo/ICONS/align-to-right.png"
+              onclick="onChangeFocus()"
+            />
+          </div>
+          <!-- <div>
+            <img class="change-focus" src="logo/ICONS/align-to-right.png" onclick="onChangeFocus()">
+        </div> -->
+
+          <input
+            type="color"
+            id="txtcolor"
+            name="txtcolor"
+            value="#020202"
+            oninput="onChangTxtColor(this.value)"
+          />
+          <div class="txt-size">
+            <span>text size:</span>
+            <input
+              class="txt-size-input"
+              type="number"
+              class="txt-size"
+              oninput="onChangeTxtSize(this.value)"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer>
+      <div class="logo">
+        <img src="logo/Layer 2_2021-12-15/Layer 2.png" alt="" />
+      </div>
+      <span>all rights reserved 2019</span>
+    </footer>
+    <script src="js/meme.service.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/galleryController.js"></script>
+  </body>
+</html>
