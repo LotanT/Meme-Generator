@@ -100,6 +100,7 @@ var gMeme = {
     {
       txt: 'I sometimes eat Falafel',
       size: 20,
+      font: 'Impact',
       align: 'center',
       color: '#ff0000',
       x: 50,
@@ -111,7 +112,9 @@ var gMeme = {
 function getMeme() {
   return gMeme;
 }
-
+function getCurrLine() {
+  return gMeme.lines[gMeme.selectedLineIdx];
+}
 function getImages() {
   return gImgs;
 }
@@ -130,7 +133,7 @@ function setTxtColor(color) {
 }
 function setTxtSize(diff) {
   gMeme.lines[gMeme.selectedLineIdx].size =
-    gMeme.lines[gMeme.selectedLineIdx].size + diff*2;
+    gMeme.lines[gMeme.selectedLineIdx].size + diff * 2;
 }
 function changeFocus() {
   gMeme.selectedLineIdx++;
@@ -142,11 +145,12 @@ function addline() {
   const newLine = {
     txt: '',
     size: 20,
+    font: 'Impact',
     align: 'center',
     color: '#020202',
     x: 50,
     y: 100,
-    width: 0
+    isDrag: false,
   };
   gMeme.lines.push(newLine);
   gMeme.selectedLineIdx = gMeme.lines.length - 1;
@@ -156,7 +160,17 @@ function deletLine() {
   changeFocus();
 }
 
-function setMeme(img, id) {
+function setLineDrag(isDrag) {
+  gMeme.lines[gMeme.selectedLineIdx].isDrag = isDrag;
+}
+
+function moveLine(dx, dy) {
+  const line = getCurrLine();
+  line.x += dx;
+  line.y += dy;
+}
+
+function setMeme(id) {
   gMeme = {
     selectedImgId: id,
     selectedLineIdx: 0,
@@ -164,18 +178,22 @@ function setMeme(img, id) {
       {
         txt: 'I eat Falafel',
         size: 20,
+        font: 'Impact',
         align: 'center',
         color: '#ff0000',
         x: 50,
         y: 50,
+        isDrag: false,
       },
       {
         txt: 'I hate Falafel',
         size: 20,
+        font: 'Impact',
         align: 'center',
         color: '#ff0000',
         x: 50,
         y: 200,
+        isDrag: false,
       },
     ],
   };

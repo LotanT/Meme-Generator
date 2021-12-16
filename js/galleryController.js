@@ -7,7 +7,7 @@ function renderGallery(){
     elContainer.hidden = true;
     const imgs = getImages();
     const strHtmls = imgs.map((img)=>{
-        return `<img src="${img.url}" onclick="onChooseImg(this,${img.id})">`
+        return `<img src="${img.url}" onclick="onChooseImg(${img.id})">`
     })
     document.querySelector('.gallery-container').innerHTML = strHtmls.join('');
     
