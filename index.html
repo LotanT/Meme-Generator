@@ -92,20 +92,37 @@
               <option value="Verdana">Verdana</option>
             </select>
           </div>
-          <input
-            type="color"
-            id="txtcolor"
-            name="txtcolor"
-            value="#020202"
-            oninput="onChangTxtColor(this.value)"
-          />
-          <div class="txt-size">
-            <span>text size:</span>
+          <div class="txt-color">
+            <span>text</span>
             <input
-              class="txt-size-input"
-              type="number"
-              class="txt-size"
-              oninput="onChangeTxtSize(this.value)"
+              class="txtcolor"
+              type="color"
+              id="txtcolor"
+              name="txtcolor"
+              value="#020202"
+              oninput="onChangTxtColor(this.value)"
+            />
+          </div>
+          <div class="stroke-color">
+            <span>stroke</span>
+            <input
+              class="strokecolor"
+              type="color"
+              id="strokecolor"
+              name="strokecolor"
+              value="#020202"
+              oninput="onChangStrokeColor(this.value)"
+            />
+          </div>
+          <div class="stroke-on">
+            <span>stroke on/off</span>
+            <input
+              class="strokeon"
+              type="checkbox"
+              id="strokeon"
+              name="strokeon"
+              checked
+              onchange="onStrokeOn()"
             />
           </div>
           <div class="download-btn">

@@ -105,6 +105,7 @@ var gMeme = {
       color: '#ff0000',
       x: 50,
       y: 50,
+      isStroke: true
     },
   ],
 };
@@ -142,14 +143,17 @@ function changeFocus() {
 }
 function addline() {
   const newLine = {
-    txt: '',
+    idx: gMeme.lines.length,
+    txt: 'Add here',
     size: 20,
     font: 'Impact',
     align: 'center',
     color: '#020202',
+    strokeColor: '#020202',
     x: 50,
     y: 100,
     isDrag: false,
+    isStroke: true
   };
   gMeme.lines.push(newLine);
   gMeme.selectedLineIdx = gMeme.lines.length - 1;
@@ -176,35 +180,40 @@ function changeFont(font) {
   getCurrLine().font = font;
 }
 
+function changStrokeColor(color){
+  getCurrLine().strokeColor = color;
+}
+
 function setWidthLine(lineSet, width) {
-  var lineIdx = gMeme.lines.findIndex((line) => line.txt === lineSet.txt);
+  var lineIdx = gMeme.lines.findIndex((line) => line.idx === lineSet.idx);
   gMeme.lines[lineIdx].width = width;
 }
+
+function setStroke(){
+  getCurrLine().isStroke = !getCurrLine().isStroke
+}
+
+
+
 function setMeme(id) {
   gMeme = {
     selectedImgId: id,
     selectedLineIdx: 0,
     lines: [
       {
-        txt: 'I eat Falafel',
+        idx: 0,
+        txt: 'Add here',
         size: 20,
         font: 'Impact',
         align: 'center',
-        color: '#ff0000',
-        x: 50,
-        y: 50,
+        color: '#000000',
+        strokeColor: '#000000',
+        x: 200,
+        y: 25,
         isDrag: false,
-      },
-      {
-        txt: 'I hate Falafel',
-        size: 20,
-        font: 'Impact',
-        align: 'center',
-        color: '#ff0000',
-        x: 50,
-        y: 200,
-        isDrag: false,
-      },
+        isStroke: true,
+        width: 50
+      }
     ],
   };
 }

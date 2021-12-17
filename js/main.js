@@ -8,8 +8,8 @@ const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 function init() {
   gElCanvas = document.getElementById('my-canvas');
   gCtx = gElCanvas.getContext('2d');
-  resizeCanvas();
-  renderMeme();
+  // resizeCanvas();
+  // renderMeme();
   renderGallery();
   var elContainer = document.querySelector('.editor');
   elContainer.hidden = true;
@@ -19,24 +19,32 @@ function init() {
 function renderMeme() {
   const meme = getMeme();
   const img = getImgByID(meme.selectedImgId);
-  renderImg(img);
+  const canvasSize = renderImg(img);
   meme.lines.forEach((line) => {
     writeTxt(line);
     if(line === getCurrLine()) setControlBox(line);
   });
-  if (!meme.lines.length) return;
   var elInput = document.querySelector('.meme-input');
-  elInput.value = meme.lines[meme.selectedLineIdx].txt;
-  var elTxtColor = document.querySelector('#txtcolor');
-  elTxtColor.value = meme.lines[meme.selectedLineIdx].color;
-  var elTxtSize = document.querySelector('.txt-size-input');
-  elTxtSize.value = meme.lines[meme.selectedLineIdx].size;
+  var elTxtColor = document.getElementById('txtcolor');
+  var elStrokeColor = document.getElementById('strokecolor');
+  var elStrokeOn = document.getElementById('strokeon');
+  if (!meme.lines.length || meme.selectedLineIdx === -1) {
+    elInput.value = '';
+    elTxtColor.value = '#020202';
+    elStrokeColor.value = '#020202';
+    elStrokeOn.checked = true;   
+  } else{
+    elInput.value = meme.lines[meme.selectedLineIdx].txt;
+    elTxtColor.value = meme.lines[meme.selectedLineIdx].color;
+    elStrokeColor.value = meme.lines[meme.selectedLineIdx].strokeColor;
+    elStrokeOn.checked = meme.lines[meme.selectedLineIdx].isStroke;
+  }
 }
-
 function resizeCanvas() {
   var elContainer = document.querySelector('.canvas-container');
   gElCanvas.width = elContainer.offsetWidth;
   gElCanvas.height = elContainer.offsetHeight;
+  console.log(gElCanvas.height, gElCanvas.width);
   renderMeme();
 }
 function onChooseImg(id) {
@@ -58,6 +66,7 @@ function renderImg(img) {
   gElCanvas.height =
     (img.naturalHeight * elContainer.offsetWidth) / img.naturalWidth;
   gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height);
+  return {w: gElCanvas.width, h: gElCanvas.height}
 }
 
 function writeTxt(line) {
@@ -66,7 +75,9 @@ function writeTxt(line) {
   gCtx.textBaseline = 'middle';
   gCtx.textAlign = line.align;
   gCtx.fillText(line.txt, line.x, line.y);
-  // gCtx.strokeText(line.txt, line.x, line.y);
+  gCtx.strokeStyle = line.strokeColor;
+  gCtx.lineWidth = 1;
+  if(line.isStroke) gCtx.strokeText(line.txt, line.x, line.y);
   setWidthLine(line,gCtx.measureText(line.txt).width);
 }
 
@@ -83,6 +94,7 @@ function setControlBox(line) {
   );
 }
 function drawRect(x, y, width, height) {
+  if(!getCurrLine()) return
   gCtx.beginPath();
   gCtx.strokeStyle = '#ffffff';
   gCtx.lineWidth = 3;
@@ -107,13 +119,15 @@ function isLineClicked(pos) {
     );
   });
   if (clickedLine) {
-    gMeme.selectedLineIdx = lines.findIndex(
-      (line) => line.txt === clickedLine.txt
-    );
+    gMeme.selectedLineIdx = clickedLine.idx;
     renderMeme()
     return true;
   } 
-  else return false;
+  else {
+    gMeme.selectedLineIdx = -1;
+    renderMeme()
+    return false;
+  }
 }
 
 function addListeners() {
@@ -183,16 +197,19 @@ function getEvPos(ev) {
 }
 
 function onChangeImput(txt) {
+  if(!getCurrLine()) return
   setLineTxt(txt);
   renderMeme();
 }
 
 function onChangTxtColor(color) {
+  if(!getCurrLine()) return
   setTxtColor(color);
   renderMeme();
 }
 
 function onChangeTxtSize(diff) {
+  if(!getCurrLine()) return
   setTxtSize(diff);
   renderMeme();
 }
@@ -208,16 +225,19 @@ function onAddLine() {
 }
 
 function onDeletLint() {
+  if(!getCurrLine()) return
   deletLine();
   renderMeme();
 }
 
 function onChangeAlign(align){
+  if(!getCurrLine()) return
   changeAlign(align);
   renderMeme();
 }
 
 function onChangeFont(font){
+  if(!getCurrLine()) return
   changeFont(font);
   renderMeme();
 }
@@ -225,4 +245,16 @@ function onChangeFont(font){
 function downloadImg(elLink) {
   var imgContent = gElCanvas.toDataURL('image/jpeg');
   elLink.href = imgContent;
+}
+
+function onChangStrokeColor(color){
+  if(!getCurrLine()) return
+  changStrokeColor(color);
+  renderMeme();
+}
+
+function onStrokeOn(){
+  if(!getCurrLine()) return
+  setStroke();
+  renderMeme();
 }
