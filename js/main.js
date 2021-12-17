@@ -64,19 +64,21 @@ function writeTxt(line) {
   gCtx.font = `${line.size}px ${line.font}`;
   gCtx.fillStyle = line.color;
   gCtx.textBaseline = 'middle';
-  gCtx.textAlign = line.aling;
+  gCtx.textAlign = line.align;
   gCtx.fillText(line.txt, line.x, line.y);
   // gCtx.strokeText(line.txt, line.x, line.y);
+  setWidthLine(line,gCtx.measureText(line.txt).width);
 }
 
 function setControlBox(line) {
-  var txt = line.txt;
-  var width = gCtx.measureText(txt).width;
   var height = line.size;
+  var x = line.x - 5
+  if(line.align === 'right') x -= line.width;
+  else if(line.align === 'center') x -= line.width/2
   drawRect(
-    line.x - 5,
+    x,
     line.y - height / 2 - 3,
-    width + 10,
+    line.width + 10,
     height + 3
   );
 }
@@ -92,9 +94,14 @@ function drawRect(x, y, width, height) {
 function isLineClicked(pos) {
   const lines = getMeme().lines;
   var clickedLine = lines.find((line) => {
+    var x = line.x;
+    if(line.align === 'right') x -= line.width;
+    else if(line.align === 'center') x -= line.width/2
+    // console.log(x,pos.x,x+line.width)
+    // console.log(line.y - line.size / 2 - 3,line.y + line.size / 2 + 3)
     return (
-      pos.x >= line.x &&
-      pos.x <= line.x + gCtx.measureText(line.txt).width &&
+      pos.x >= x &&
+      pos.x <= x + line.width &&
       pos.y >= line.y - line.size / 2 - 3 &&
       pos.y <= line.y + line.size / 2 + 3
     );
@@ -203,4 +210,19 @@ function onAddLine() {
 function onDeletLint() {
   deletLine();
   renderMeme();
+}
+
+function onChangeAlign(align){
+  changeAlign(align);
+  renderMeme();
+}
+
+function onChangeFont(font){
+  changeFont(font);
+  renderMeme();
+}
+
+function downloadImg(elLink) {
+  var imgContent = gElCanvas.toDataURL('image/jpeg');
+  elLink.href = imgContent;
 }

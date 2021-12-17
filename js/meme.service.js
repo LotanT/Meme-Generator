@@ -126,14 +126,13 @@ function getImgByID(imgId) {
 }
 
 function setLineTxt(txt) {
-  gMeme.lines[gMeme.selectedLineIdx].txt = txt;
+  getCurrLine().txt = txt;
 }
 function setTxtColor(color) {
-  gMeme.lines[gMeme.selectedLineIdx].color = color;
+  getCurrLine().color = color;
 }
 function setTxtSize(diff) {
-  gMeme.lines[gMeme.selectedLineIdx].size =
-    gMeme.lines[gMeme.selectedLineIdx].size + diff * 2;
+  getCurrLine().size = getCurrLine().size + diff * 2;
 }
 function changeFocus() {
   gMeme.selectedLineIdx++;
@@ -161,7 +160,7 @@ function deletLine() {
 }
 
 function setLineDrag(isDrag) {
-  gMeme.lines[gMeme.selectedLineIdx].isDrag = isDrag;
+  getCurrLine().isDrag = isDrag;
 }
 
 function moveLine(dx, dy) {
@@ -170,6 +169,17 @@ function moveLine(dx, dy) {
   line.y += dy;
 }
 
+function changeAlign(align) {
+  getCurrLine().align = align;
+}
+function changeFont(font) {
+  getCurrLine().font = font;
+}
+
+function setWidthLine(lineSet, width) {
+  var lineIdx = gMeme.lines.findIndex((line) => line.txt === lineSet.txt);
+  gMeme.lines[lineIdx].width = width;
+}
 function setMeme(id) {
   gMeme = {
     selectedImgId: id,

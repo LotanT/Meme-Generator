@@ -68,24 +68,30 @@
             />
           </div>
           <div class="align-left">
-            <img src="logo/ICONS/align-to-left.png" onclick="onChangeFocus()" />
+            <img src="logo/ICONS/align-to-left.png" onclick="onChangeAlign('left')" />
           </div>
           <div class="align-center">
             <img
               src="logo/ICONS/center-text-alignment.png"
-              onclick="onChangeFocus()"
+              onclick="onChangeAlign('center')"
             />
           </div>
           <div class="align-right">
             <img
               src="logo/ICONS/align-to-right.png"
-              onclick="onChangeFocus()"
+              onclick="onChangeAlign('right')"
             />
           </div>
-          <!-- <div>
-            <img class="change-focus" src="logo/ICONS/align-to-right.png" onclick="onChangeFocus()">
-        </div> -->
-
+          <div class="font">
+            <select class="font-select" onchange="onChangeFont(this.value)" id="">
+              <option value="Arial">Arial</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Trebuchet MS">Trebuchet MS</option>
+              <option value="Verdana">Verdana</option>
+            </select>
+          </div>
           <input
             type="color"
             id="txtcolor"
@@ -101,6 +107,9 @@
               class="txt-size"
               oninput="onChangeTxtSize(this.value)"
             />
+          </div>
+          <div class="download-btn">
+            <a href="#" class="download" onclick="downloadImg(this)" download="my-meme.jpg"><img src="logo/ICONS/download-btn.png"></a>
           </div>
         </div>
       </div>
