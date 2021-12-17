@@ -111,9 +111,18 @@ header {
 .main-gallery {
     background-color: #e3e3e3;
 }
-
+/* canvas */
+.canvas-container {
+    width: 75% ;
+ 
+ }
+ 
+ canvas {
+     /* background-color: rgb(110, 137, 161); */
+ }
 /* editor */
 .main-editor {
+    /* width: 100%; */
     justify-content: space-evenly;
     padding-top: 1.5625em;
     background-color: #e3e3e3;
@@ -121,10 +130,12 @@ header {
 }
 
 .editor-control {
+    width: 95%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
     padding: 0 1em 1em 1em;
+    justify-items: center
 }
 
 .editor-control div {
@@ -191,15 +202,7 @@ header {
     width: 100px;
 }
 
-/* canvas */
-.canvas-container {
-   width: 40vw ;
 
-}
-
-canvas {
-    /* background-color: rgb(110, 137, 161); */
-}
 
 /* footer */
 footer {
@@ -249,9 +252,10 @@ footer span {
         /* margin: 0 auto;
         padding-left: 0;
         padding-right: 0; */
-        
     }
-
+    .canvas-container {
+        /* width: 40% ; */
+     }
 }
 
 /* Medium */
@@ -281,6 +285,13 @@ footer span {
         text-align: center;
         font-size: 1.25em;
     }
+    .canvas-container {
+        width: 40% ;
+     
+     }
+     .editor-control {
+        width: 50% ;
+     }
 }
 
 /* Large */
