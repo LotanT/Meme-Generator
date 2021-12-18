@@ -124,9 +124,10 @@ function getImages() {
 }
 
 function getImgByID(imgId) {
-  const img = new Image();
-  img.src = gImgs.find((img) => img.id === imgId).url;
-  return img;
+  var img = new Image();
+  img = gImgs.find((img) => img.id === imgId);
+  if(img) return img;
+  return gMeme.selectedImgId
 }
 
 function setLineTxt(txt) {
@@ -218,7 +219,6 @@ function saveMeme(memeImg) {
 
 function loadSavedMemes() {
   gSavedMemes = loadFromStorage(STORAGE_KEY) || [];
-  console.log(gSavedMemes);
 }
 
 function getSavedMemes() {
@@ -226,7 +226,6 @@ function getSavedMemes() {
 }
 function setMeme(id) {
   gMeme = gSavedMemes.find((meme) => meme.id === id);
-  console.log(gMeme);
   if (gMeme) return;
   gMeme = {
     selectedImgId: id,

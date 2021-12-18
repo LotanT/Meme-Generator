@@ -46,7 +46,6 @@ function resizeCanvas() {
   var elContainer = document.querySelector('.canvas-container');
   gElCanvas.width = elContainer.offsetWidth;
   gElCanvas.height = elContainer.offsetHeight;
-  console.log(gElCanvas.height, gElCanvas.width);
   renderMeme();
 }
 function onChooseImg(id) {
@@ -61,9 +60,7 @@ function displayEditor(){
   elLinks.forEach((link) => link.classList.remove('live'));
   elSection[1].hidden = false;
 }
-function onImgInput(ev) {
-  loadImageFromInput(ev, renderImg);
-}
+
 function renderImg(img) {
   var elContainer = document.querySelector('.canvas-container');
   gElCanvas.width = elContainer.offsetWidth;
@@ -269,4 +266,20 @@ function onStrokeOn(){
 
 function onSaveMeme(){
   saveMeme(gElCanvas.toDataURL('image/jpeg'));
+}
+
+function onImgInput(ev) {
+  loadImageFromInput(ev, renderImg)
+}
+
+function loadImageFromInput(ev, onImageReady) {
+  var reader = new FileReader()
+  var img = new Image()
+
+  reader.onload = (event) => {
+      img.onload = onImageReady.bind(null, img)
+      img.src = event.target.result
+      onChooseImg(img)
+  }
+  reader.readAsDataURL(ev.target.files[0])
 }
