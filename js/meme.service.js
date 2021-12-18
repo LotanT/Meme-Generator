@@ -124,10 +124,13 @@ function getImages() {
 }
 
 function getImgByID(imgId) {
-  var img = new Image();
-  img = gImgs.find((img) => img.id === imgId);
-  if(img) return img;
-  return gMeme.selectedImgId
+  const img = new Image();
+  var currImg = gImgs.find((img) => img.id === imgId);
+  if(currImg){
+    img.src = currImg.url;
+    return img;
+  } 
+  return gMeme.selectedImgId;
 }
 
 function setLineTxt(txt) {
@@ -162,6 +165,7 @@ function addline() {
     y: y,
     isDrag: false,
     isStroke: true,
+    isSetSize: false
   };
   gMeme.lines.push(newLine);
   gMeme.selectedLineIdx = gMeme.lines.length - 1;
@@ -224,6 +228,10 @@ function loadSavedMemes() {
 function getSavedMemes() {
   return gSavedMemes;
 }
+
+function setLineSize(isSetSize){
+  getCurrLine().isSetSize = isSetSize;
+}
 function setMeme(id) {
   gMeme = gSavedMemes.find((meme) => meme.id === id);
   if (gMeme) return;
@@ -244,6 +252,7 @@ function setMeme(id) {
         isDrag: false,
         isStroke: true,
         width: 50,
+        isSetSize: false
       },
     ],
   };

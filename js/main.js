@@ -3,12 +3,12 @@
 var gElCanvas;
 var gCtx;
 var gStartPos;
-const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
+const gTouchEvs = ['touchstart', 'touchmove', 'touchend'];
 
 function init() {
   gElCanvas = document.getElementById('my-canvas');
   gCtx = gElCanvas.getContext('2d');
-  loadSavedMemes()
+  loadSavedMemes();
   // resizeCanvas();
   // renderMeme();
   renderGallery();
@@ -24,7 +24,7 @@ function renderMeme() {
   saveCanvasSize(canvasSize);
   meme.lines.forEach((line) => {
     writeTxt(line);
-    if(line === getCurrLine()) setControlBox(line);
+    if (line === getCurrLine()) setControlBox(line);
   });
   var elInput = document.querySelector('.meme-input');
   var elTxtColor = document.getElementById('txtcolor');
@@ -34,8 +34,8 @@ function renderMeme() {
     elInput.value = '';
     elTxtColor.value = '#020202';
     elStrokeColor.value = '#020202';
-    elStrokeOn.checked = true;   
-  } else{
+    elStrokeOn.checked = true;
+  } else {
     elInput.value = meme.lines[meme.selectedLineIdx].txt;
     elTxtColor.value = meme.lines[meme.selectedLineIdx].color;
     elStrokeColor.value = meme.lines[meme.selectedLineIdx].strokeColor;
@@ -50,12 +50,12 @@ function resizeCanvas() {
 }
 function onChooseImg(id) {
   setMeme(id);
-  displayEditor()
+  displayEditor();
   renderMeme();
 }
-function displayEditor(){
+function displayEditor() {
   const elSection = document.querySelectorAll('section');
-  elSection.forEach(section=>section.hidden = true)
+  elSection.forEach((section) => (section.hidden = true));
   const elLinks = document.querySelectorAll('.clean-list li');
   elLinks.forEach((link) => link.classList.remove('live'));
   elSection[1].hidden = false;
@@ -67,7 +67,7 @@ function renderImg(img) {
   gElCanvas.height =
     (img.naturalHeight * elContainer.offsetWidth) / img.naturalWidth;
   gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height);
-  return {w: gElCanvas.width, h: gElCanvas.height}
+  return { w: gElCanvas.width, h: gElCanvas.height };
 }
 
 function writeTxt(line) {
@@ -78,55 +78,79 @@ function writeTxt(line) {
   gCtx.fillText(line.txt, line.x, line.y);
   gCtx.strokeStyle = line.strokeColor;
   gCtx.lineWidth = 1;
-  if(line.isStroke) gCtx.strokeText(line.txt, line.x, line.y);
-  setWidthLine(line,gCtx.measureText(line.txt).width);
+  if (line.isStroke) gCtx.strokeText(line.txt, line.x, line.y);
+  setWidthLine(line, gCtx.measureText(line.txt).width);
 }
 
 function setControlBox(line) {
   var height = line.size;
-  var x = line.x - 5
-  if(line.align === 'right') x -= line.width;
-  else if(line.align === 'center') x -= line.width/2
-  drawRect(
-    x,
-    line.y - height / 2 - 3,
-    line.width + 10,
-    height + 3
-  );
+  var x = line.x - 5;
+  if (line.align === 'right') x -= line.width;
+  else if (line.align === 'center') x -= line.width / 2;
+  drawRect(x, line.y - height / 2 - 3, line.width + 10, height + 3);
 }
 function drawRect(x, y, width, height) {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
   gCtx.beginPath();
   gCtx.strokeStyle = '#ffffff';
   gCtx.lineWidth = 3;
   gCtx.rect(x, y, width, height);
   gCtx.stroke();
   gCtx.closePath();
+  drawArc(x + width, y + height);
+}
+function drawArc(x, y, size = 4, color = 'blue') {
+  gCtx.beginPath();
+  gCtx.lineWidth = '1';
+  gCtx.arc(x, y, size, 0, 2 * Math.PI);
+  gCtx.strokeStyle = 'white';
+  gCtx.stroke();
+  gCtx.fillStyle = color;
+  gCtx.fill();
 }
 
 function isLineClicked(pos) {
   const lines = getMeme().lines;
   var clickedLine = lines.find((line) => {
     var x = line.x;
-    if(line.align === 'right') x -= line.width;
-    else if(line.align === 'center') x -= line.width/2
-    // console.log(x,pos.x,x+line.width)
-    // console.log(line.y - line.size / 2 - 3,line.y + line.size / 2 + 3)
+    if (line.align === 'right') x -= line.width;
+    else if (line.align === 'center') x -= line.width / 2;
     return (
       pos.x >= x &&
-      pos.x <= x + line.width &&
+      pos.x <= x + line.width + 5 &&
       pos.y >= line.y - line.size / 2 - 3 &&
-      pos.y <= line.y + line.size / 2 + 3
+      pos.y <= line.y + line.size / 2 + 3 + 5
     );
   });
   if (clickedLine) {
     gMeme.selectedLineIdx = clickedLine.idx;
-    renderMeme()
+    renderMeme();
     return true;
-  } 
-  else {
+  } else {
     gMeme.selectedLineIdx = -1;
-    renderMeme()
+    renderMeme();
+    return false;
+  }
+}
+
+function isSetSizeclicked(pos) {
+  const lines = getMeme().lines;
+  var clickedSetSize = lines.find((line) => {
+    var x = line.x;
+    if (line.align === 'right') x -= line.width;
+    else if (line.align === 'center') x -= line.width / 2;
+    return (
+      Math.abs(x + line.width - pos.x) < 8 &&
+      Math.abs(line.y + line.size / 2 + 3 - pos.y) < 8
+    );
+  });
+  if (clickedSetSize) {
+    gMeme.selectedLineIdx = clickedSetSize.idx;
+    renderMeme();
+    return true;
+  } else {
+    gMeme.selectedLineIdx = -1;
+    renderMeme();
     return false;
   }
 }
@@ -156,6 +180,12 @@ function addTouchListeners() {
 
 function onDown(ev) {
   const pos = getEvPos(ev);
+  if (isSetSizeclicked(pos)) {
+    setLineSize(true);
+    gStartPos = pos;
+    document.body.style.cursor = 'grabbing';
+    return;
+  }
   if (!isLineClicked(pos)) return;
   setLineDrag(true);
   gStartPos = pos;
@@ -164,7 +194,14 @@ function onDown(ev) {
 
 function onMove(ev) {
   const line = getCurrLine();
-  if(!line) return;
+  if (!line) return;
+  if (line.isSetSize) {
+    const pos = getEvPos(ev);
+    const dx = (pos.x - gStartPos.x) / 3.7;
+    setTxtSize(dx);
+    gStartPos = pos;
+    renderMeme();
+  }
   if (!line.isDrag) return;
   const pos = getEvPos(ev);
   const dx = pos.x - gStartPos.x;
@@ -175,7 +212,8 @@ function onMove(ev) {
 }
 
 function onUp() {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
+  setLineSize(false);
   setLineDrag(false);
   document.body.style.cursor = 'unset';
 }
@@ -196,25 +234,25 @@ function getEvPos(ev) {
   }
   return pos;
 }
-function onChooseMeme(memeId){
-  setMeme(memeId)
-  displayEditor()
+function onChooseMeme(memeId) {
+  setMeme(memeId);
+  displayEditor();
   renderMeme();
 }
 function onChangeImput(txt) {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
   setLineTxt(txt);
   renderMeme();
 }
 
 function onChangTxtColor(color) {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
   setTxtColor(color);
   renderMeme();
 }
 
 function onChangeTxtSize(diff) {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
   setTxtSize(diff);
   renderMeme();
 }
@@ -230,19 +268,19 @@ function onAddLine() {
 }
 
 function onDeletLint() {
-  if(!getCurrLine()) return
+  if (!getCurrLine()) return;
   deletLine();
   renderMeme();
 }
 
-function onChangeAlign(align){
-  if(!getCurrLine()) return
+function onChangeAlign(align) {
+  if (!getCurrLine()) return;
   changeAlign(align);
   renderMeme();
 }
 
-function onChangeFont(font){
-  if(!getCurrLine()) return
+function onChangeFont(font) {
+  if (!getCurrLine()) return;
   changeFont(font);
   renderMeme();
 }
@@ -252,34 +290,34 @@ function downloadImg(elLink) {
   elLink.href = imgContent;
 }
 
-function onChangStrokeColor(color){
-  if(!getCurrLine()) return
+function onChangStrokeColor(color) {
+  if (!getCurrLine()) return;
   changStrokeColor(color);
   renderMeme();
 }
 
-function onStrokeOn(){
-  if(!getCurrLine()) return
+function onStrokeOn() {
+  if (!getCurrLine()) return;
   setStroke();
   renderMeme();
 }
 
-function onSaveMeme(){
+function onSaveMeme() {
   saveMeme(gElCanvas.toDataURL('image/jpeg'));
 }
 
 function onImgInput(ev) {
-  loadImageFromInput(ev, renderImg)
+  loadImageFromInput(ev, renderImg);
 }
 
 function loadImageFromInput(ev, onImageReady) {
-  var reader = new FileReader()
-  var img = new Image()
+  var reader = new FileReader();
+  var img = new Image();
 
   reader.onload = (event) => {
-      img.onload = onImageReady.bind(null, img)
-      img.src = event.target.result
-      onChooseImg(img)
-  }
-  reader.readAsDataURL(ev.target.files[0])
+    img.onload = onImageReady.bind(null, img);
+    img.src = event.target.result;
+    onChooseImg(img);
+  };
+  reader.readAsDataURL(ev.target.files[0]);
 }

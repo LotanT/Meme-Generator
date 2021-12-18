@@ -3,8 +3,9 @@
 
 
 function renderGallery(){
-    var elContainer = document.querySelector('.editor');
-    elContainer.hidden = true;
+    const elSection = document.querySelectorAll('section');
+    elSection.forEach(section=>section.hidden = true)
+    elSection[0].hidden = false;
     const imgs = getImages();
     const strHtmls = imgs.map((img)=>{
         return `<img src="${img.url}" onclick="onChooseImg(${img.id})">`
