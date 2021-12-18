@@ -24,6 +24,9 @@ function onChangeDisplay(ev){
         case 'Gallery':
             elSection[0].hidden = false;
         case 'Saved':
+            console.log(elSection[1].hidden);
+            elSection[2].hidden = false;
+            renderCanvas();
         case 'About':
     }
     toggleMenu()

@@ -126,10 +126,16 @@
             />
           </div>
           <div class="download-btn">
-            <a href="#" class="download" onclick="downloadImg(this)" download="my-meme.jpg"><img src="logo/ICONS/download-btn.png"></a>
+            <a href="#" class="download editor-btn" onclick="downloadImg(this)" download="my-meme.jpg">Download</a>
+          </div>
+          <div class="save-btn">
+            <a href="#" class="save editor-btn" onclick="onSaveMeme()">Save</a>
           </div>
         </div>
       </div>
+    </section>
+    <section class="savedMemes">
+      <div class="savedMemes-container main-layout main-gallery gallery-container"></div>
     </section>
     <footer>
       <div class="logo">
@@ -140,5 +146,8 @@
     <script src="js/meme.service.js"></script>
     <script src="js/main.js"></script>
     <script src="js/galleryController.js"></script>
+    <script src="js/Saved.controller.js"></script>
+    <script src="js/storage.service.js"></script>
+    <script src="js/util.service.js"></script>
   </body>
 </html>

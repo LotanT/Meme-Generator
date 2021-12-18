@@ -1,6 +1,9 @@
 'use strict';
 
 var gKeywordSearchCountMap = { funny: 12, cat: 16, baby: 2 };
+var gCanvasSize;
+var gSavedMemes;
+const STORAGE_KEY = 'MemesDB';
 var gImgs = [
   {
     id: 1,
@@ -105,7 +108,7 @@ var gMeme = {
       color: '#ff0000',
       x: 50,
       y: 50,
-      isStroke: true
+      isStroke: true,
     },
   ],
 };
@@ -142,6 +145,10 @@ function changeFocus() {
   }
 }
 function addline() {
+  var y;
+  if (!gMeme.lines.length) y = 25;
+  else if (gMeme.lines.length === 1) y = gCanvasSize.h - 20;
+  else y = gCanvasSize.h / 2;
   const newLine = {
     idx: gMeme.lines.length,
     txt: 'Add here',
@@ -150,10 +157,10 @@ function addline() {
     align: 'center',
     color: '#020202',
     strokeColor: '#020202',
-    x: 50,
-    y: 100,
+    x: gCanvasSize.w / 2,
+    y: y,
     isDrag: false,
-    isStroke: true
+    isStroke: true,
   };
   gMeme.lines.push(newLine);
   gMeme.selectedLineIdx = gMeme.lines.length - 1;
@@ -180,7 +187,7 @@ function changeFont(font) {
   getCurrLine().font = font;
 }
 
-function changStrokeColor(color){
+function changStrokeColor(color) {
   getCurrLine().strokeColor = color;
 }
 
@@ -189,13 +196,38 @@ function setWidthLine(lineSet, width) {
   gMeme.lines[lineIdx].width = width;
 }
 
-function setStroke(){
-  getCurrLine().isStroke = !getCurrLine().isStroke
+function setStroke() {
+  getCurrLine().isStroke = !getCurrLine().isStroke;
 }
 
+function saveCanvasSize(canvasSize) {
+  gCanvasSize = canvasSize;
+}
 
+function saveMeme(memeImg) {
+  gMeme.memeImg = memeImg;
+  if (!gMeme.id) gMeme.id = makeId();
+  else {
+    const memeIdx = gSavedMemes.findIndex((meme) => meme.id === gMeme.id);
+    gSavedMemes.splice(memeIdx, 1);
+  }
+  gSavedMemes.unshift(gMeme);
+  console.log(gSavedMemes);
+  saveToStorage(STORAGE_KEY, gSavedMemes);
+}
 
+function loadSavedMemes() {
+  gSavedMemes = loadFromStorage(STORAGE_KEY) || [];
+  console.log(gSavedMemes);
+}
+
+function getSavedMemes() {
+  return gSavedMemes;
+}
 function setMeme(id) {
+  gMeme = gSavedMemes.find((meme) => meme.id === id);
+  console.log(gMeme);
+  if (gMeme) return;
   gMeme = {
     selectedImgId: id,
     selectedLineIdx: 0,
@@ -208,12 +240,12 @@ function setMeme(id) {
         align: 'center',
         color: '#000000',
         strokeColor: '#000000',
-        x: 200,
+        x: 156,
         y: 25,
         isDrag: false,
         isStroke: true,
-        width: 50
-      }
+        width: 50,
+      },
     ],
   };
 }

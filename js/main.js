@@ -8,6 +8,7 @@ const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 function init() {
   gElCanvas = document.getElementById('my-canvas');
   gCtx = gElCanvas.getContext('2d');
+  loadSavedMemes()
   // resizeCanvas();
   // renderMeme();
   renderGallery();
@@ -20,6 +21,7 @@ function renderMeme() {
   const meme = getMeme();
   const img = getImgByID(meme.selectedImgId);
   const canvasSize = renderImg(img);
+  saveCanvasSize(canvasSize);
   meme.lines.forEach((line) => {
     writeTxt(line);
     if(line === getCurrLine()) setControlBox(line);
@@ -49,13 +51,15 @@ function resizeCanvas() {
 }
 function onChooseImg(id) {
   setMeme(id);
-  var elEditor = document.querySelector('.editor');
-  elEditor.hidden = false;
-  var elEditor = document.querySelector('.gallery');
-  elEditor.hidden = true;
+  displayEditor()
+  renderMeme();
+}
+function displayEditor(){
+  const elSection = document.querySelectorAll('section');
+  elSection.forEach(section=>section.hidden = true)
   const elLinks = document.querySelectorAll('.clean-list li');
   elLinks.forEach((link) => link.classList.remove('live'));
-  renderMeme();
+  elSection[1].hidden = false;
 }
 function onImgInput(ev) {
   loadImageFromInput(ev, renderImg);
@@ -195,7 +199,11 @@ function getEvPos(ev) {
   }
   return pos;
 }
-
+function onChooseMeme(memeId){
+  setMeme(memeId)
+  displayEditor()
+  renderMeme();
+}
 function onChangeImput(txt) {
   if(!getCurrLine()) return
   setLineTxt(txt);
@@ -257,4 +265,8 @@ function onStrokeOn(){
   if(!getCurrLine()) return
   setStroke();
   renderMeme();
+}
+
+function onSaveMeme(){
+  saveMeme(gElCanvas.toDataURL('image/jpeg'));
 }

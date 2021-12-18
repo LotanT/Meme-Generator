@@ -107,6 +107,9 @@ header {
     justify-items: center;
     padding: 1.875em;
 }
+.gallery-container img{
+    max-width: 300px;
+}
 
 .main-gallery {
     background-color: #e3e3e3;
@@ -146,6 +149,9 @@ header {
     background-color: #ffffff;
     cursor: pointer;
     border-radius: 10px;
+}
+.editor-control img:hover{
+    background-color: gray;
 }
 
 .meme-input {
@@ -195,11 +201,24 @@ header {
 }
 .download-btn{
     grid-column: 4/span 2;
-    grid-row: 5/6;
-    width: 200px;
+    grid-row: 6/7;
 }
-.download img{
-    width: 100px;
+.editor-btn{
+    background-color: #ff7f00;
+    color: #ffffff;
+    font-size: 1.5em;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.download-btn .download{
+    padding: 10px;
+}
+.save-btn{
+    grid-column: 3/4;
+    grid-row: 6/7;
+}
+.save{
+    padding: 10px 20px;
 }
 
 
