@@ -34,6 +34,10 @@ img {
     width: 40px;
 }
 
+.hidden{
+    visibility: hidden;
+}
+
 /* header */
 header {
     background-color: #ff7f00;
@@ -147,6 +151,7 @@ header {
 
 .editor-control {
     width: 95%;
+    max-height: 500px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 2fr 1fr;
@@ -162,9 +167,13 @@ header {
     background-color: #ffffff;
     cursor: pointer;
     border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0px 3px 0px 2px grey;
 }
 .editor-control img:hover{
-    background-color: gray;
+    position: relative;
+    top: 3px;
+    box-shadow: 0px 0px 0px 0px grey;
 }
 
 .meme-input {
@@ -202,7 +211,6 @@ header {
 .txt-color{
     grid-column: 3/4;
     text-align: center;
-    font-size: 14px;
 }
 .stroke-color{
     grid-column: 4/5; 

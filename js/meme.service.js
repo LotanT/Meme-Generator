@@ -148,6 +148,9 @@ function changeFocus() {
     gMeme.selectedLineIdx = 0;
   }
 }
+function setCurrLine(currLine){
+  gMeme.selectedLineIdx = currLine;
+}
 function addline() {
   var y;
   if (!gMeme.lines.length) y = 25;
@@ -157,15 +160,17 @@ function addline() {
     idx: gMeme.lines.length,
     txt: 'Add here',
     size: 20,
-    font: 'Impact',
+    font: 'Trebuchet MS',
     align: 'center',
-    color: '#020202',
-    strokeColor: '#020202',
+    color: '#ffffff',
+    strokeColor: '#ffffff',
     x: gCanvasSize.w / 2,
     y: y,
     isDrag: false,
-    isStroke: true,
-    isSetSize: false
+    isStroke: false,
+    isSetSize: false,
+    isRotate: false,
+    angle: 0
   };
   gMeme.lines.push(newLine);
   gMeme.selectedLineIdx = gMeme.lines.length - 1;
@@ -177,6 +182,10 @@ function deletLine() {
 
 function setLineDrag(isDrag) {
   getCurrLine().isDrag = isDrag;
+}
+
+function setLineRotate(isRotate){
+  getCurrLine().isRotate = isRotate;
 }
 
 function moveLine(dx, dy) {
@@ -232,6 +241,11 @@ function getSavedMemes() {
 function setLineSize(isSetSize){
   getCurrLine().isSetSize = isSetSize;
 }
+
+function setAngelRotate(diffAngle){
+  getCurrLine().angle += diffAngle;
+}
+ 
 function setMeme(id) {
   gMeme = gSavedMemes.find((meme) => meme.id === id);
   if (gMeme) return;
@@ -243,16 +257,18 @@ function setMeme(id) {
         idx: 0,
         txt: 'Add here',
         size: 20,
-        font: 'Impact',
+        font: 'Trebuchet MS',
         align: 'center',
-        color: '#000000',
-        strokeColor: '#000000',
+        color: '#ffffff',
+        strokeColor: '#ffffff',
         x: 156,
         y: 25,
         isDrag: false,
-        isStroke: true,
+        isStroke: false,
         width: 50,
-        isSetSize: false
+        isSetSize: false,
+        isRotate: false,
+        angle: 0
       },
     ],
   };

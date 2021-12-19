@@ -9,8 +9,6 @@ function init() {
   gElCanvas = document.getElementById('my-canvas');
   gCtx = gElCanvas.getContext('2d');
   loadSavedMemes();
-  // resizeCanvas();
-  // renderMeme();
   renderGallery();
   var elContainer = document.querySelector('.editor');
   elContainer.hidden = true;
@@ -30,17 +28,24 @@ function renderMeme() {
   var elTxtColor = document.getElementById('txtcolor');
   var elStrokeColor = document.getElementById('strokecolor');
   var elStrokeOn = document.getElementById('strokeon');
+  var eltxtFont = document.querySelector('.font-select');
   if (!meme.lines.length || meme.selectedLineIdx === -1) {
     elInput.value = '';
     elTxtColor.value = '#020202';
     elStrokeColor.value = '#020202';
     elStrokeOn.checked = true;
+    eltxtFont = 'Trebuchet MS';
   } else {
-    elInput.value = meme.lines[meme.selectedLineIdx].txt;
-    elTxtColor.value = meme.lines[meme.selectedLineIdx].color;
-    elStrokeColor.value = meme.lines[meme.selectedLineIdx].strokeColor;
-    elStrokeOn.checked = meme.lines[meme.selectedLineIdx].isStroke;
+    elInput.value = getCurrLine().txt;
+    elTxtColor.value = getCurrLine().color;
+    elStrokeColor.value = getCurrLine().strokeColor;
+    elStrokeOn.checked = getCurrLine().isStroke;
+    eltxtFont.value = getCurrLine().font;
   }
+}
+
+function setDisplayEditor(){
+  
 }
 function resizeCanvas() {
   var elContainer = document.querySelector('.canvas-container');
@@ -75,10 +80,14 @@ function writeTxt(line) {
   gCtx.fillStyle = line.color;
   gCtx.textBaseline = 'middle';
   gCtx.textAlign = line.align;
-  gCtx.fillText(line.txt, line.x, line.y);
+  gCtx.setTransform(1, 0, 0, 1, 0, 0);
+  gCtx.translate(line.x, line.y);
+  // console.log(line.angle)
+  gCtx.rotate(line.angle* Math.PI / 180)
+  gCtx.fillText(line.txt, 0, 0);
   gCtx.strokeStyle = line.strokeColor;
   gCtx.lineWidth = 1;
-  if (line.isStroke) gCtx.strokeText(line.txt, line.x, line.y);
+  if (line.isStroke) gCtx.strokeText(line.txt, 0, 0);
   setWidthLine(line, gCtx.measureText(line.txt).width);
 }
 
@@ -94,19 +103,22 @@ function drawRect(x, y, width, height) {
   gCtx.beginPath();
   gCtx.strokeStyle = '#ffffff';
   gCtx.lineWidth = 3;
-  gCtx.rect(x, y, width, height);
+  gCtx.rect(-width / 2, -height / 2, width, height);
   gCtx.stroke();
   gCtx.closePath();
-  drawArc(x + width, y + height);
+  drawArc(width, height);
 }
-function drawArc(x, y, size = 4, color = 'blue') {
+function drawArc(width, height, size = 4, color = 'blue') {
   gCtx.beginPath();
   gCtx.lineWidth = '1';
-  gCtx.arc(x, y, size, 0, 2 * Math.PI);
+  gCtx.arc(width / 2, height / 2, size, 0, 2 * Math.PI);
   gCtx.strokeStyle = 'white';
   gCtx.stroke();
   gCtx.fillStyle = color;
   gCtx.fill();
+  const img = new Image();
+  img.src = 'images/rotate-btn.png';
+  // gCtx.drawImage(img, width / 2, -height / 2 -20, 20, 20);
 }
 
 function isLineClicked(pos) {
@@ -123,11 +135,11 @@ function isLineClicked(pos) {
     );
   });
   if (clickedLine) {
-    gMeme.selectedLineIdx = clickedLine.idx;
+    setCurrLine(clickedLine.idx);
     renderMeme();
     return true;
   } else {
-    gMeme.selectedLineIdx = -1;
+    setCurrLine(-1);
     renderMeme();
     return false;
   }
@@ -145,11 +157,33 @@ function isSetSizeclicked(pos) {
     );
   });
   if (clickedSetSize) {
-    gMeme.selectedLineIdx = clickedSetSize.idx;
+    setCurrLine(clickedSetSize.idx);
     renderMeme();
     return true;
   } else {
-    gMeme.selectedLineIdx = -1;
+    setCurrLine(-1);
+    renderMeme();
+    return false;
+  }
+}
+
+function isRotateclicked(pos) {
+  const lines = getMeme().lines;
+  var clickedLineRotate = lines.find((line) => {
+    var x = line.x;
+    if (line.align === 'right') x -= line.width;
+    else if (line.align === 'center') x -= line.width / 2;
+    return (
+      Math.abs(x + line.width + 10 - pos.x) < 10 &&
+      Math.abs(line.y - line.size / 2 - 10 - pos.y) < 10
+    );
+  });
+  if (clickedLineRotate) {
+    setCurrLine(clickedLineRotate.idx);
+    renderMeme();
+    return true;
+  } else {
+    setCurrLine(-1);
     renderMeme();
     return false;
   }
@@ -180,14 +214,19 @@ function addTouchListeners() {
 
 function onDown(ev) {
   const pos = getEvPos(ev);
-  if (isSetSizeclicked(pos)) {
+  // if (isRotateclicked(pos)) {
+  //   setLineRotate(true);
+  //   setStartPosAndCursor(pos);
+  // } else
+   if (isSetSizeclicked(pos)) {
     setLineSize(true);
-    gStartPos = pos;
-    document.body.style.cursor = 'grabbing';
-    return;
+    setStartPosAndCursor(pos);
+  } else if (isLineClicked(pos)) {
+    setLineDrag(true);
+    setStartPosAndCursor(pos);
   }
-  if (!isLineClicked(pos)) return;
-  setLineDrag(true);
+}
+function setStartPosAndCursor(pos) {
   gStartPos = pos;
   document.body.style.cursor = 'grabbing';
 }
@@ -195,24 +234,31 @@ function onDown(ev) {
 function onMove(ev) {
   const line = getCurrLine();
   if (!line) return;
+  const pos = getEvPos(ev);
+  if (line.isRotate) {
+    // var diffAngle = Math.atan2(line.y - pos.y, line.x - pos.x);
+    var diffAngle = Math.atan2(gStartPos.y - pos.y, gStartPos.x - pos.x);
+    // diffAngle = (diffAngle * 180) / Math.PI
+    if(pos.x < line.x) diffAngle = -diffAngle;
+    console.log(diffAngle)
+    setAngelRotate(-diffAngle);
+  }
   if (line.isSetSize) {
-    const pos = getEvPos(ev);
     const dx = (pos.x - gStartPos.x) / 3.7;
     setTxtSize(dx);
-    gStartPos = pos;
-    renderMeme();
   }
-  if (!line.isDrag) return;
-  const pos = getEvPos(ev);
-  const dx = pos.x - gStartPos.x;
-  const dy = pos.y - gStartPos.y;
-  moveLine(dx, dy);
+  if (line.isDrag) {
+    const dx = pos.x - gStartPos.x;
+    const dy = pos.y - gStartPos.y;
+    moveLine(dx, dy);
+  }
   gStartPos = pos;
   renderMeme();
 }
 
 function onUp() {
   if (!getCurrLine()) return;
+  setLineRotate(false);
   setLineSize(false);
   setLineDrag(false);
   document.body.style.cursor = 'unset';
@@ -286,6 +332,8 @@ function onChangeFont(font) {
 }
 
 function downloadImg(elLink) {
+  setCurrLine(-1);
+  renderMeme();
   var imgContent = gElCanvas.toDataURL('image/jpeg');
   elLink.href = imgContent;
 }
@@ -303,6 +351,8 @@ function onStrokeOn() {
 }
 
 function onSaveMeme() {
+  setCurrLine(-1);
+  renderMeme();
   saveMeme(gElCanvas.toDataURL('image/jpeg'));
 }
 
