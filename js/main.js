@@ -44,9 +44,7 @@ function renderMeme() {
   }
 }
 
-function setDisplayEditor(){
-  
-}
+function setDisplayEditor() {}
 function resizeCanvas() {
   var elContainer = document.querySelector('.canvas-container');
   gElCanvas.width = elContainer.offsetWidth;
@@ -83,7 +81,7 @@ function writeTxt(line) {
   gCtx.setTransform(1, 0, 0, 1, 0, 0);
   gCtx.translate(line.x, line.y);
   // console.log(line.angle)
-  gCtx.rotate(line.angle* Math.PI / 180)
+  gCtx.rotate((line.angle * Math.PI) / 180);
   gCtx.fillText(line.txt, 0, 0);
   gCtx.strokeStyle = line.strokeColor;
   gCtx.lineWidth = 1;
@@ -93,28 +91,28 @@ function writeTxt(line) {
 
 function setControlBox(line) {
   var height = line.size;
-  var x = line.x - 5;
-  if (line.align === 'right') x -= line.width;
-  else if (line.align === 'center') x -= line.width / 2;
-  drawRect(x, line.y - height / 2 - 3, line.width + 10, height + 3);
+  var x = -line.width / 2 -5;
+  if (line.align === 'right') x -= line.width/2;
+  else if (line.align === 'left') x += line.width / 2;
+  drawRect(x, line.width + 10, height + 3);
 }
-function drawRect(x, y, width, height) {
+function drawRect(x, width, height) {
   if (!getCurrLine()) return;
   gCtx.beginPath();
   gCtx.strokeStyle = '#ffffff';
   gCtx.lineWidth = 3;
-  gCtx.rect(-width / 2, -height / 2, width, height);
+  gCtx.rect(x, -height / 2, width, height);
   gCtx.stroke();
   gCtx.closePath();
-  drawArc(width, height);
+  drawArc(x,width, height);
 }
-function drawArc(width, height, size = 4, color = 'blue') {
+function drawArc(x,width, height) {
   gCtx.beginPath();
   gCtx.lineWidth = '1';
-  gCtx.arc(width / 2, height / 2, size, 0, 2 * Math.PI);
+  gCtx.arc(width+x, height / 2, 4, 0, 2 * Math.PI);
   gCtx.strokeStyle = 'white';
   gCtx.stroke();
-  gCtx.fillStyle = color;
+  gCtx.fillStyle = 'blue';
   gCtx.fill();
   const img = new Image();
   img.src = 'images/rotate-btn.png';
@@ -218,7 +216,7 @@ function onDown(ev) {
   //   setLineRotate(true);
   //   setStartPosAndCursor(pos);
   // } else
-   if (isSetSizeclicked(pos)) {
+  if (isSetSizeclicked(pos)) {
     setLineSize(true);
     setStartPosAndCursor(pos);
   } else if (isLineClicked(pos)) {
@@ -239,8 +237,8 @@ function onMove(ev) {
     // var diffAngle = Math.atan2(line.y - pos.y, line.x - pos.x);
     var diffAngle = Math.atan2(gStartPos.y - pos.y, gStartPos.x - pos.x);
     // diffAngle = (diffAngle * 180) / Math.PI
-    if(pos.x < line.x) diffAngle = -diffAngle;
-    console.log(diffAngle)
+    if (pos.x < line.x) diffAngle = -diffAngle;
+    console.log(diffAngle);
     setAngelRotate(-diffAngle);
   }
   if (line.isSetSize) {
